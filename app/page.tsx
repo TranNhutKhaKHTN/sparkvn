@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { IDEAS, STAGES } from "@/lib/ideas";
+import { STAGES } from "@/lib/ideas";
+import { getAllIdeas } from "@/lib/load-ideas";
 
 const CARDS = [
   {
@@ -29,7 +30,8 @@ const CARDS = [
 ];
 
 export default function Home() {
-  const count = (s: string) => IDEAS.filter((i) => i.stage === s).length;
+  const ideas = getAllIdeas();
+  const count = (s: string) => ideas.filter((i) => i.stage === s).length;
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-12">
@@ -45,7 +47,7 @@ export default function Home() {
         href="/ideas"
         className="mt-6 inline-block border border-accent px-4 py-2 font-mono text-sm text-accent hover:bg-accent hover:text-background"
       >
-        xem ý tưởng →
+        Xem ý tưởng →
       </Link>
 
       <section className="mt-12 grid gap-px border border-line bg-line md:grid-cols-3">

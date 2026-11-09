@@ -2,23 +2,23 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { IDEAS, STAGES, type Stage } from "@/lib/ideas";
+import { STAGES, type Idea, type Stage } from "@/lib/ideas";
 
 const norm = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").toLowerCase();
 
-export default function IdeaList() {
+export default function IdeaList({ ideas }: { ideas: Idea[] }) {
   const [q, setQ] = useState("");
   const [stage, setStage] = useState<Stage | "all">("all");
 
   const results = useMemo(() => {
     const nq = norm(q.trim());
-    return IDEAS.filter((i) => {
+    return ideas.filter((i) => {
       if (stage !== "all" && i.stage !== stage) return false;
       if (!nq) return true;
-      return norm(`${i.title} ${i.problem} ${i.field}`).includes(nq);
+      return norm(`${i.title} ${i.description} ${i.field}`).includes(nq);
     });
-  }, [q, stage]);
+  }, [ideas, q, stage]);
 
   return (
     <div>
@@ -37,7 +37,7 @@ export default function IdeaList() {
               stage === s ? "border-accent text-accent" : "border-line text-muted hover:text-foreground"
             }`}
           >
-            {s === "all" ? "all" : STAGES[s].label.toLowerCase()}
+            {s === "all" ? "Tất cả" : STAGES[s].label}
           </button>
         ))}
       </div>
@@ -48,24 +48,31 @@ export default function IdeaList() {
         {results.map((i) => (
           <li key={i.id} className="bg-panel p-4">
             <div className="flex items-center gap-2 font-mono text-xs text-muted">
-              <span>#{i.id}</span>
               <span className="text-accent">[{STAGES[i.stage].label}]</span>
               <span>{i.field}</span>
-              <span className="ml-auto">▲ {i.supporters}</span>
             </div>
             <h3 className="mt-1 font-semibold">
               <Link href={`/ideas/${i.id}`} className="hover:text-accent">
                 {i.title}
               </Link>
             </h3>
-            <p className="mt-1 text-sm text-muted">{i.problem}</p>
+            <p className="mt-1 text-sm text-muted">{i.description}</p>
             <p className="mt-2 font-mono text-xs text-muted">
               {i.author} · {i.createdAt}
             </p>
           </li>
         ))}
         {results.length === 0 && (
-          <li className="bg-panel p-6 text-center font-mono text-sm text-muted">Không tìm thấy.</li>
+          <li className="bg-panel p-6 text-center font-mono text-sm text-muted">
+            {ideas.length === 0 ? (
+              <>
+                Chưa có ý tưởng nào. Hãy là người đầu tiên, xem{" "}
+                <Link href="/guide" className="text-accent hover:underline">Hướng dẫn</Link>.
+              </>
+            ) : (
+              "Không tìm thấy."
+            )}
+          </li>
         )}
       </ul>
     </div>

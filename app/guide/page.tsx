@@ -17,6 +17,7 @@ title: Cảnh báo ngập đường theo thời gian thực
 description: Người dân không biết tuyến đường nào đang ngập để tránh.
 field: Giao thông
 stage: spark
+created: 2026-11-01
 ---
 
 ## Mục tiêu ý tưởng
@@ -55,7 +56,7 @@ const code = "bg-background px-1 font-mono text-foreground";
 export default function GuidePage() {
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-10">
-      <h1 className="font-mono text-xl font-semibold">/hướng-dẫn</h1>
+      <h1 className="font-mono text-xl font-semibold">Hướng dẫn</h1>
       <p className="mt-1 text-sm text-muted">
         Dùng skill <span className={code}>spark-idea</span> trong Claude Code để viết mô tả ý tưởng đúng template.
         Skill sẽ hỏi bạn từng bước, bạn không cần biết lập trình.
@@ -79,12 +80,36 @@ export default function GuidePage() {
           Mục nào chưa biết thì cứ nói chưa có.
         </Step>
         <Step n={4} title="Xác nhận và nhận file">
-          Skill tóm tắt để bạn kiểm tra, rồi tạo file <span className={code}>idea-ten-y-tuong.md</span> ở thư mục hiện tại.
+          Skill tóm tắt để bạn kiểm tra, rồi tạo file <span className={code}>ten-y-tuong.md</span> theo đúng template.
         </Step>
-        <Step n={5} title="Gửi ý tưởng">
-          Gửi file vừa tạo cho Spark VN để được xem xét và đăng lên trang ý tưởng. Kênh tiếp nhận sẽ được cập nhật ở đây.
+        <Step n={5} title="Tạo Pull Request và chờ duyệt">
+          Skill hỏi xác nhận, rồi tự tạo nhánh <span className={code}>idea/ten-y-tuong</span>, thêm file vào{" "}
+          <span className={code}>content/ideas/</span> và mở Pull Request vào repo Spark VN. Ý tưởng chỉ hiện trên
+          trang sau khi người duyệt merge. Cần cài sẵn và đăng nhập <span className={code}>gh</span> (GitHub CLI).
         </Step>
       </ol>
+
+      <h2 className="mt-10 font-mono text-sm text-muted">## dành cho agent</h2>
+      <div className="mt-3 border border-line bg-panel p-4 text-sm">
+        <p className="text-muted">
+          Khi agent (hoặc bạn) có một ý tưởng mới, hãy làm theo quy trình sau thay vì tự viết tay:
+        </p>
+        <ol className="mt-3 list-inside list-decimal space-y-1">
+          <li>Cài skill <span className={code}>spark-idea</span> (bước 1 ở trên) và gọi <span className={code}>/spark-idea</span>.</li>
+          <li>Sinh mô tả đúng template, chỉ dùng thông tin người dùng cung cấp, không tự bịa.</li>
+          <li>Hỏi người dùng xác nhận nội dung trước khi đưa lên repo công khai.</li>
+          <li>
+            Mỗi ý tưởng một nhánh <span className={code}>idea/&lt;slug&gt;</span>, chỉ thêm đúng một file{" "}
+            <span className={code}>content/ideas/&lt;slug&gt;.md</span>.
+          </li>
+          <li>Tạo PR vào <span className={code}>main</span>, rồi <b>chờ duyệt</b>. Không tự merge.</li>
+          <li>Nếu có yêu cầu chỉnh sửa, cập nhật trên cùng nhánh và push tiếp.</li>
+        </ol>
+        <p className="mt-3 text-xs text-muted">Câu lệnh mẫu giao cho agent:</p>
+        <pre className="mt-1 overflow-x-auto bg-background p-3 font-mono text-xs">
+          {"Dùng skill spark-idea để viết mô tả cho ý tưởng: <ý tưởng của bạn>, rồi tạo PR vào TranNhutKhaKHTN/sparkvn và chờ duyệt."}
+        </pre>
+      </div>
 
       <h2 className="mt-10 font-mono text-sm text-muted">## template mô tả ý tưởng</h2>
       <ul className="mt-3 divide-y divide-line border border-line">
@@ -96,7 +121,7 @@ export default function GuidePage() {
         ))}
       </ul>
 
-      <h2 className="mt-10 font-mono text-sm text-muted">## ví dụ file đầu ra</h2>
+      <h2 className="mt-10 font-mono text-sm text-muted">## ví dụ file đầu ra (content/ideas/canh-bao-ngap-duong.md)</h2>
       <pre className="mt-3 overflow-x-auto border border-line bg-panel p-4 font-mono text-xs leading-relaxed">
         {SAMPLE}
       </pre>

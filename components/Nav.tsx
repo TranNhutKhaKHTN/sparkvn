@@ -9,8 +9,8 @@ export default function Nav() {
           <Logo /> spark<span className="text-muted">.vn</span>
         </Link>
         <nav className="flex gap-5 text-muted">
-          <Link href="/guide" className="hover:text-foreground">hướng dẫn</Link>
-          <Link href="/ideas" className="hover:text-foreground">ideas</Link>
+          <Link href="/ideas" className="hover:text-foreground">Ý tưởng</Link>
+          <Link href="/guide" className="hover:text-foreground">Hướng dẫn</Link>
         </nav>
       </div>
     </header>

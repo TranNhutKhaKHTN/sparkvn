@@ -1,6 +1,6 @@
 ---
 name: spark-idea
-description: Giúp người dùng viết mô tả ý tưởng đúng template của Spark VN (tiêu đề, mô tả ngắn, mục tiêu, lộ trình, trạng thái, liên hệ, dữ liệu). Dùng khi người dùng muốn đề xuất, viết hoặc chỉnh một ý tưởng dùng công nghệ giải quyết vấn đề xã hội cho Spark VN.
+description: Viết mô tả ý tưởng đúng template của Spark VN (tiêu đề, mô tả ngắn, mục tiêu, lộ trình, trạng thái, liên hệ, dữ liệu) rồi tạo Pull Request vào repo Spark VN để chờ duyệt. Dùng khi người dùng hoặc agent có ý tưởng mới dùng công nghệ giải quyết vấn đề xã hội và muốn đề xuất lên Spark VN.
 ---
 
 # Spark VN: viết mô tả ý tưởng
@@ -37,7 +37,7 @@ Sau khi đủ thông tin, tóm tắt lại cho người dùng xác nhận, cho p
 
 ## Đầu ra
 
-Ghi một file Markdown tên `idea-<slug-khong-dau>.md` ở thư mục hiện tại, đúng format sau (giữ nguyên tên các mục):
+Ghi một file Markdown tên `<slug-khong-dau>.md` (ví dụ `canh-bao-ngap-duong.md`), đúng format sau (giữ nguyên tên các mục). `created` là ngày hôm nay, định dạng `YYYY-MM-DD`. Slug chỉ gồm chữ thường không dấu, số và dấu gạch ngang; nó cũng là địa chỉ trang `/ideas/<slug>`.
 
 ```markdown
 ---
@@ -45,6 +45,7 @@ title: <Tiêu đề>
 description: <Mô tả ngắn>
 field: <Lĩnh vực>
 stage: <spark|kindle|ignite|flame>
+created: <YYYY-MM-DD>
 ---
 
 ## Mục tiêu ý tưởng
@@ -73,4 +74,21 @@ Quy ước:
 - Giai đoạn đã hoàn thành đánh `[x]`, chưa xong đánh `[ ]`.
 - Nếu không có dữ liệu, ghi một dòng `Chưa có.` dưới mục "Dữ liệu của ý tưởng".
 
-Kết thúc bằng việc báo đường dẫn file đã tạo và nhắc người dùng gửi file đó cho Spark VN theo hướng dẫn trên trang web.
+## Tạo Pull Request để chờ duyệt
+
+Repo tiếp nhận ý tưởng: `https://github.com/TranNhutKhaKHTN/sparkvn` (nhánh `main`). File ý tưởng nằm ở `content/ideas/<slug>.md`. Sau khi người dùng xác nhận nội dung:
+
+1. **Hỏi xác nhận trước khi tạo PR**, vì PR là hành động công khai. Nói rõ file nào sẽ được đưa lên repo công khai và thông tin liên hệ nào sẽ hiển thị.
+2. Kiểm tra `gh auth status`. Nếu chưa đăng nhập `gh`, hướng dẫn người dùng tự làm theo cách thủ công (fork repo, thêm file vào `content/ideas/`, mở Pull Request) và dừng ở đó.
+3. Lấy mã nguồn:
+   - Nếu thư mục hiện tại đã là bản clone của repo Spark VN thì dùng luôn.
+   - Nếu không: `gh repo fork TranNhutKhaKHTN/sparkvn --clone` rồi `cd sparkvn`. Nếu đã fork từ trước, đồng bộ với `main` của repo gốc trước khi tạo nhánh.
+4. Tạo nhánh từ `main` mới nhất: `git switch -c idea/<slug>`.
+5. Đặt file vào `content/ideas/<slug>.md`. **Chỉ thêm file này, không sửa file nào khác.** Nếu file cùng tên đã tồn tại, hỏi người dùng đổi slug.
+6. Commit: `git add content/ideas/<slug>.md && git commit -m "Idea: <tiêu đề>"`.
+7. Push nhánh rồi tạo PR vào `main` của repo gốc:
+   `gh pr create --repo TranNhutKhaKHTN/sparkvn --base main --title "Idea: <tiêu đề>" --body "<mô tả ngắn: vấn đề, lĩnh vực, trạng thái>"`
+   (dùng `--head <user>:idea/<slug>` nếu push từ fork).
+8. **Không tự merge.** Báo cho người dùng link PR và nói rõ: ý tưởng sẽ hiện trên trang sau khi người duyệt merge. Nếu người duyệt yêu cầu chỉnh sửa, cập nhật file trên cùng nhánh, commit và push tiếp, không mở PR mới.
+
+Nếu có agent khác đang chạy cùng việc này, mỗi ý tưởng phải có một nhánh và một PR riêng.

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { IDEAS, STAGES, getIdea } from "@/lib/ideas";
+import { STAGES } from "@/lib/ideas";
+import { getIdea } from "@/lib/load-ideas";
 
-export function generateStaticParams() {
-  return IDEAS.map((i) => ({ id: i.id }));
-}
+// Cho phép render theo yêu cầu: danh sách ý tưởng có thể rỗng nên không có tham số build sẵn.
+export const instant = false;
 
 export async function generateMetadata({ params }: PageProps<"/ideas/[id]">): Promise<Metadata> {
   const { id } = await params;
@@ -33,17 +33,15 @@ export default async function IdeaPage({ params }: PageProps<"/ideas/[id]">) {
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-10">
       <Link href="/ideas" className="font-mono text-xs text-muted hover:text-foreground">
-        ← /ideas
+        ← Ý tưởng
       </Link>
 
       <div className="mt-4 flex items-center gap-2 font-mono text-xs text-muted">
-        <span>#{idea.id}</span>
         <span className="text-accent">[{STAGES[idea.stage].label}]</span>
         <span>{idea.field}</span>
-        <span className="ml-auto">▲ {idea.supporters}</span>
       </div>
       <h1 className="mt-2 text-2xl font-bold">{idea.title}</h1>
-      <p className="mt-2 text-muted">{idea.problem}</p>
+      <p className="mt-2 text-muted">{idea.description}</p>
 
       <Section title="mục tiêu ý tưởng">
         <ul className="space-y-2 text-sm">
@@ -64,7 +62,7 @@ export default async function IdeaPage({ params }: PageProps<"/ideas/[id]">) {
                 [{r.done ? "x" : " "}]
               </span>
               <div>
-                <div className="font-mono text-xs text-muted">{r.phase}</div>
+                {r.phase && <div className="font-mono text-xs text-muted">{r.phase}</div>}
                 <div>{r.detail}</div>
               </div>
             </li>
